@@ -53,18 +53,39 @@ func main() {
 	}
 	log.Printf("using protocol: %s", protocol)
 
+	mode := os.Getenv("GENERATOR_MODE")
+	log.Printf("using generator mode: %q", mode)
+
 	ctx := context.Background()
+
+	endpoint := endpointGRPC
+	if protocol == "http" {
+		endpoint = endpointHTTP
+	}
+
+	if mode == "postgresqlreceiver" {
+		res, err := resource.New(ctx,
+			resource.WithAttributes(
+				semconv.ServiceName("postgresql"),
+				attribute.String("db.system", "postgresql"),
+			),
+		)
+		if err != nil {
+			log.Fatalf("failed to create resource: %v", err)
+		}
+		log.Printf("sending %d postgresql metrics to %s", count, endpoint)
+		if err := sendPostgresMetrics(ctx, res, protocol); err != nil {
+			log.Fatalf("postgresql metrics error: %v", err)
+		}
+		log.Println("postgresql metrics sent successfully")
+		return
+	}
 
 	res, err := resource.New(ctx,
 		resource.WithAttributes(semconv.ServiceName("generator")),
 	)
 	if err != nil {
 		log.Fatalf("failed to create resource: %v", err)
-	}
-
-	endpoint := endpointGRPC
-	if protocol == "http" {
-		endpoint = endpointHTTP
 	}
 
 	var wg sync.WaitGroup
@@ -203,6 +224,92 @@ func sendMetrics(ctx context.Context, res *resource.Resource, protocol string) e
 
 	if err := mp.ForceFlush(ctx); err != nil {
 		return fmt.Errorf("flush metrics: %w", err)
+	}
+	return nil
+}
+
+func sendPostgresMetrics(ctx context.Context, res *resource.Resource, protocol string) error {
+	var exporter sdkmetric.Exporter
+	var err error
+	switch protocol {
+	case "grpc":
+		exporter, err = otlpmetricgrpc.New(ctx,
+			otlpmetricgrpc.WithInsecure(),
+			otlpmetricgrpc.WithEndpoint(endpointGRPC),
+		)
+	case "http":
+		exporter, err = otlpmetrichttp.New(ctx,
+			otlpmetrichttp.WithInsecure(),
+			otlpmetrichttp.WithEndpoint(endpointHTTP),
+		)
+	}
+	if err != nil {
+		return fmt.Errorf("create metric exporter: %w", err)
+	}
+
+	mp := sdkmetric.NewMeterProvider(
+		sdkmetric.WithReader(sdkmetric.NewPeriodicReader(exporter, sdkmetric.WithInterval(100*time.Millisecond))),
+		sdkmetric.WithResource(res),
+	)
+	defer mp.Shutdown(ctx)
+
+	meter := mp.Meter("postgresqlreceiver")
+
+	rowsCounter, err := meter.Int64Counter("postgresql.rows",
+		metric.WithDescription("The number of rows in the database."),
+		metric.WithUnit("{row}"),
+	)
+	if err != nil {
+		return fmt.Errorf("create postgresql.rows counter: %w", err)
+	}
+
+	commitsCounter, err := meter.Int64Counter("postgresql.commits",
+		metric.WithDescription("The number of commits."),
+		metric.WithUnit("{commit}"),
+	)
+	if err != nil {
+		return fmt.Errorf("create postgresql.commits counter: %w", err)
+	}
+
+	dbSizeGauge, err := meter.Int64Gauge("postgresql.db_size",
+		metric.WithDescription("The database disk usage."),
+		metric.WithUnit("By"),
+	)
+	if err != nil {
+		return fmt.Errorf("create postgresql.db_size gauge: %w", err)
+	}
+
+	blocksReadCounter, err := meter.Int64Counter("postgresql.blocks_read",
+		metric.WithDescription("The number of blocks read."),
+		metric.WithUnit("{block}"),
+	)
+	if err != nil {
+		return fmt.Errorf("create postgresql.blocks_read counter: %w", err)
+	}
+
+	rollbacksCounter, err := meter.Int64Counter("postgresql.rollbacks",
+		metric.WithDescription("The number of rollbacks."),
+		metric.WithUnit("{rollback}"),
+	)
+	if err != nil {
+		return fmt.Errorf("create postgresql.rollbacks counter: %w", err)
+	}
+
+	dbAttr := metric.WithAttributes(attribute.String("postgresql.database.name", "postgres"))
+
+	for i := range count {
+		rowsCounter.Add(ctx, int64(i+1), dbAttr,
+			metric.WithAttributes(attribute.String("state", "live")))
+		commitsCounter.Add(ctx, int64(i+1), dbAttr)
+		dbSizeGauge.Record(ctx, int64((i+1)*1024), dbAttr)
+		blocksReadCounter.Add(ctx, int64(i+1), dbAttr,
+			metric.WithAttributes(attribute.String("source", "heap_read")))
+		rollbacksCounter.Add(ctx, int64(i), dbAttr)
+	}
+	log.Printf("postgresql metrics: %d iterations recorded, flushing", count)
+
+	if err := mp.ForceFlush(ctx); err != nil {
+		return fmt.Errorf("flush postgresql metrics: %w", err)
 	}
 	return nil
 }

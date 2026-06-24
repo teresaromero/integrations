@@ -1,6 +1,5 @@
 variants:
-  grpc:
+  postgresqlreceiver:
     OTLP_PROTOCOL: grpc
-  http:
-    OTLP_PROTOCOL: http
-default: grpc
+    GENERATOR_MODE: postgresqlreceiver
+default: postgresqlreceiver

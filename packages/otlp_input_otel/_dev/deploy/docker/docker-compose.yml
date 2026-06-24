@@ -4,4 +4,5 @@ services:
     build: .
     environment:
       OTLP_PROTOCOL: ${OTLP_PROTOCOL:-grpc}
+      GENERATOR_MODE: ${GENERATOR_MODE:-default}
 

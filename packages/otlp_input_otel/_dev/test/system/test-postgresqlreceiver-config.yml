@@ -1,0 +1,11 @@
+service: otlp_input_otel
+service_notify_signal: SIGHUP
+variant: postgresqlreceiver
+vars:
+  grpc_endpoint: 0.0.0.0:4317
+  http_endpoint: 0.0.0.0:4318
+  data_stream.dataset: postgresqlreceiver
+signal_types:
+  - metrics
+assert:
+  min_count: 50
