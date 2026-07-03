@@ -1,5 +1,5 @@
 connectors:
-    forward: {}
+    forward/componentid-0: {}
 exporters:
     elasticsearch/componentid-0:
         endpoints:
@@ -37,12 +37,12 @@ receivers:
                 - package_name: aws
                   package_policy_id: test-pp-789
                   package_title: AWS
-                  package_version: "2.17.0"
+                  package_version: 2.17.0
                   policy_template: cloudtrail
                 - package_name: aws
                   package_policy_id: test-pp-789
                   package_title: AWS
-                  package_version: "2.17.0"
+                  package_version: 2.17.0
                   policy_template: guardduty
               policy_id: test-policy-123
               policy_name: Verifier-Policy-Test-Connector-abc12345
@@ -57,14 +57,14 @@ secret_references:
     - {}
 service:
     pipelines:
-        logs:
+        logs/componentid-0:
             exporters:
                 - elasticsearch/componentid-0
             receivers:
-                - forward
-        logs/componentid-0:
+                - forward/componentid-0
+        logs/componentid-1:
             exporters:
-                - forward
+                - forward/componentid-0
             processors:
                 - transform/componentid-0
             receivers:

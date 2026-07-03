@@ -1,6 +1,6 @@
 connectors:
     elasticapm/componentid-0: {}
-    forward: {}
+    forward/componentid-1: {}
 exporters:
     elasticsearch/componentid-0:
         endpoints:
@@ -69,29 +69,29 @@ receivers:
 secret_references: []
 service:
     pipelines:
-        metrics:
+        metrics/componentid-1:
             exporters:
                 - elasticsearch/componentid-0
             receivers:
-                - forward
-        metrics/componentid-1:
+                - forward/componentid-1
+        metrics/componentid-3:
             exporters:
-                - forward
+                - forward/componentid-1
             processors:
                 - transform/componentid-0
             receivers:
                 - elasticapm/componentid-0
-        traces:
-            exporters:
-                - elasticsearch/componentid-0
-            receivers:
-                - forward
         traces/componentid-0:
             exporters:
                 - elasticapm/componentid-0
-                - forward
+                - forward/componentid-1
             processors:
                 - elasticapm/componentid-0
                 - transform/componentid-1
             receivers:
                 - jaeger/componentid-0
+        traces/componentid-2:
+            exporters:
+                - elasticsearch/componentid-0
+            receivers:
+                - forward/componentid-1
