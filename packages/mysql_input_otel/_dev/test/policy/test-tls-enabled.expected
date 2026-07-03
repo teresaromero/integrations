@@ -1,5 +1,5 @@
 connectors:
-    forward/componentid-0: {}
+    forward: {}
 exporters:
     elasticsearch/componentid-0:
         endpoints:
@@ -46,11 +46,6 @@ receivers:
         allow_native_passwords: true
         collection_interval: 10s
         endpoint: localhost:3306
-        events:
-            db.server.query_sample:
-                enabled: true
-            db.server.top_query:
-                enabled: false
         initial_delay: 1s
         metrics:
             mysql.client.network.io:
@@ -71,6 +66,11 @@ receivers:
                 enabled: true
             mysql.table_open_cache:
                 enabled: true
+        events:
+            db.server.query_sample:
+                enabled: true
+            db.server.top_query:
+                enabled: false
         query_sample_collection:
             max_rows_per_query: 100
         statement_events:
@@ -88,27 +88,27 @@ receivers:
 secret_references: []
 service:
     pipelines:
-        logs/componentid-0:
+        logs:
             exporters:
                 - elasticsearch/componentid-0
             receivers:
-                - forward/componentid-0
-        logs/componentid-2:
+                - forward
+        logs/componentid-0:
             exporters:
-                - forward/componentid-0
+                - forward
             processors:
                 - resourcedetection/componentid-0
                 - transform/componentid-1
             receivers:
                 - mysql/componentid-0
-        metrics/componentid-1:
+        metrics:
             exporters:
                 - elasticsearch/componentid-0
             receivers:
-                - forward/componentid-0
-        metrics/componentid-3:
+                - forward
+        metrics/componentid-1:
             exporters:
-                - forward/componentid-0
+                - forward
             processors:
                 - resourcedetection/componentid-0
                 - transform/componentid-1

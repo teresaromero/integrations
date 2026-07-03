@@ -1,6 +1,6 @@
 connectors:
     elasticapm/componentid-0: {}
-    forward/componentid-1: {}
+    forward: {}
 exporters:
     elasticsearch/componentid-0:
         endpoints:
@@ -78,58 +78,58 @@ receivers:
         agent_config:
             enabled: false
         auth:
-            authenticator: apikeyauth/componentid-0
+            authenticator: apikeyauth
         endpoint: localhost:8200
 secret_references: []
 service:
     extensions:
-        - apikeyauth/componentid-0
+        - apikeyauth
     pipelines:
+        logs:
+            exporters:
+                - elasticsearch/componentid-0
+            receivers:
+                - forward
         logs/componentid-1:
             exporters:
-                - elasticsearch/componentid-0
-            receivers:
-                - forward/componentid-1
-        logs/componentid-4:
-            exporters:
-                - forward/componentid-1
+                - forward
             processors:
                 - resourcedetection/componentid-0
                 - transform/componentid-1
             receivers:
                 - elasticapmintake/componentid-0
+        metrics:
+            exporters:
+                - elasticsearch/componentid-0
+            receivers:
+                - forward
         metrics/componentid-2:
             exporters:
-                - elasticsearch/componentid-0
-            receivers:
-                - forward/componentid-1
-        metrics/componentid-5:
-            exporters:
-                - forward/componentid-1
+                - forward
             processors:
                 - resourcedetection/componentid-0
                 - transform/componentid-1
             receivers:
                 - elasticapmintake/componentid-0
-        metrics/componentid-6:
+        metrics/componentid-3:
             exporters:
-                - forward/componentid-1
+                - forward
             processors:
                 - transform/componentid-2
             receivers:
                 - elasticapm/componentid-0
+        traces:
+            exporters:
+                - elasticsearch/componentid-0
+            receivers:
+                - forward
         traces/componentid-0:
             exporters:
                 - elasticapm/componentid-0
-                - forward/componentid-1
+                - forward
             processors:
                 - resourcedetection/componentid-0
                 - elasticapm/componentid-0
                 - transform/componentid-1
             receivers:
                 - elasticapmintake/componentid-0
-        traces/componentid-3:
-            exporters:
-                - elasticsearch/componentid-0
-            receivers:
-                - forward/componentid-1

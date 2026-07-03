@@ -1,5 +1,5 @@
 connectors:
-    forward/componentid-0: {}
+    forward: {}
 exporters:
     elasticsearch/componentid-0:
         endpoints:
@@ -55,14 +55,14 @@ receivers:
 secret_references: []
 service:
     pipelines:
-        logs/componentid-0:
+        logs:
             exporters:
                 - elasticsearch/componentid-0
             receivers:
-                - forward/componentid-0
-        logs/componentid-1:
+                - forward
+        logs/componentid-0:
             exporters:
-                - forward/componentid-0
+                - forward
             processors:
                 - transform/componentid-0
             receivers:

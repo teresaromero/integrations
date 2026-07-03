@@ -1,6 +1,6 @@
 connectors:
     elasticapm/componentid-0: {}
-    forward/componentid-1: {}
+    forward: {}
 exporters:
     elasticsearch/componentid-0:
         endpoints:
@@ -77,64 +77,64 @@ receivers:
         protocols:
             grpc:
                 auth:
-                    authenticator: basicauth/componentid-1
+                    authenticator: basicauth
                 endpoint: localhost:4317
             http:
                 auth:
-                    authenticator: basicauth/componentid-1
+                    authenticator: basicauth
                 endpoint: localhost:4318
 secret_references:
     - {}
 service:
     extensions:
-        - basicauth/componentid-1
-        - bearertokenauth/componentid-0
+        - basicauth
+        - bearertokenauth
     pipelines:
+        logs:
+            exporters:
+                - elasticsearch/componentid-0
+            receivers:
+                - forward
         logs/componentid-1:
             exporters:
-                - elasticsearch/componentid-0
-            receivers:
-                - forward/componentid-1
-        logs/componentid-4:
-            exporters:
-                - forward/componentid-1
+                - forward
             processors:
                 - resourcedetection/componentid-0
                 - transform/componentid-1
             receivers:
                 - otlp/componentid-0
+        metrics:
+            exporters:
+                - elasticsearch/componentid-0
+            receivers:
+                - forward
         metrics/componentid-2:
             exporters:
-                - elasticsearch/componentid-0
-            receivers:
-                - forward/componentid-1
-        metrics/componentid-5:
-            exporters:
-                - forward/componentid-1
+                - forward
             processors:
                 - resourcedetection/componentid-0
                 - transform/componentid-1
             receivers:
                 - otlp/componentid-0
-        metrics/componentid-6:
+        metrics/componentid-3:
             exporters:
-                - forward/componentid-1
+                - forward
             processors:
                 - transform/componentid-2
             receivers:
                 - elasticapm/componentid-0
+        traces:
+            exporters:
+                - elasticsearch/componentid-0
+            receivers:
+                - forward
         traces/componentid-0:
             exporters:
                 - elasticapm/componentid-0
-                - forward/componentid-1
+                - forward
             processors:
                 - resourcedetection/componentid-0
                 - elasticapm/componentid-0
                 - transform/componentid-1
             receivers:
                 - otlp/componentid-0
-        traces/componentid-3:
-            exporters:
-                - elasticsearch/componentid-0
-            receivers:
-                - forward/componentid-1

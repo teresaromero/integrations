@@ -1,5 +1,5 @@
 connectors:
-    forward/componentid-0: {}
+    forward: {}
 exporters:
     elasticsearch/componentid-0:
         endpoints:
@@ -30,14 +30,14 @@ processors:
 receivers:
     kubeletstats/componentid-0:
         auth_type: serviceAccount
-        collect_all_network_interfaces:
-            node: false
-            pod: false
         collection_interval: 60s
         endpoint: https://${env:NODE_NAME}:10250
         extra_metadata_labels:
             - container.id
         initial_delay: 30s
+        collect_all_network_interfaces:
+            node: false
+            pod: false
         metric_groups:
             - container
             - pod
@@ -46,14 +46,14 @@ receivers:
 secret_references: []
 service:
     pipelines:
-        metrics/componentid-0:
+        metrics:
             exporters:
                 - elasticsearch/componentid-0
             receivers:
-                - forward/componentid-0
-        metrics/componentid-1:
+                - forward
+        metrics/componentid-0:
             exporters:
-                - forward/componentid-0
+                - forward
             processors:
                 - transform/componentid-0
             receivers:
