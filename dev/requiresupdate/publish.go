@@ -109,7 +109,7 @@ func publishPR(s packageSummary, preview bool) error {
 	// Reset HEAD to main without discarding the dirty working tree.
 	// "checkout -B" moves HEAD but does not touch untracked/modified files,
 	// so other packages' pending changes survive subsequent calls.
-	if err := git.Run("checkout", "-B", branch, "origin/main"); err != nil {
+	if err := git.Run("checkout", "-B", branch, "origin/automated-requires-update-test"); err != nil {
 		return fmt.Errorf("creating branch failed: %w", err)
 	}
 	if err := git.Run(append([]string{"add", "--"}, s.files...)...); err != nil {
