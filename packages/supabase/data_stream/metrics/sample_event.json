@@ -1,0 +1,77 @@
+{
+    "@timestamp": "2026-07-28T14:12:47.032Z",
+    "_metric_names_hash": "c549c807dda1f01d",
+    "attributes": {
+        "device": "eth0"
+    },
+    "data_stream": {
+        "dataset": "supabase.metrics.otel",
+        "namespace": "11493",
+        "type": "metrics"
+    },
+    "device": "eth0",
+    "event": {
+        "agent_id_status": "missing",
+        "dataset": "supabase.metrics.otel",
+        "ingested": "2026-07-28T14:12:57Z"
+    },
+    "host": {
+        "name": "elastic-agent-21090",
+        "os": {
+            "platform": "linux"
+        }
+    },
+    "metrics": {
+        "node_network_receive_bytes_total": 1073741824,
+        "node_network_transmit_bytes_total": 536870912
+    },
+    "node_network_receive_bytes_total": 1073741824,
+    "node_network_transmit_bytes_total": 536870912,
+    "os": {
+        "type": "linux"
+    },
+    "resource": {
+        "attributes": {
+            "host": {
+                "name": "elastic-agent-21090"
+            },
+            "os": {
+                "type": "linux"
+            },
+            "server": {
+                "address": "svc-supabase_metrics",
+                "port": "8080"
+            },
+            "service": {
+                "instance": {
+                    "id": "svc-supabase_metrics:8080"
+                },
+                "name": "prometheus_scrape"
+            },
+            "url": {
+                "scheme": "http"
+            }
+        },
+        "schema_url": "https://opentelemetry.io/schemas/1.40.0"
+    },
+    "scope": {
+        "name": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver",
+        "version": "9.4.3"
+    },
+    "server": {
+        "address": "svc-supabase_metrics",
+        "port": "8080"
+    },
+    "service": {
+        "instance": {
+            "id": "svc-supabase_metrics:8080"
+        },
+        "name": "prometheus_scrape",
+        "node": {
+            "name": "svc-supabase_metrics:8080"
+        }
+    },
+    "url": {
+        "scheme": "http"
+    }
+}

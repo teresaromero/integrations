@@ -1,0 +1,76 @@
+rules:
+  - path: /customer/v1/privileged/metrics
+    methods: ["GET"]
+    request_headers:
+      Authorization:
+        - "Basic c2VydmljZV9yb2xlOnRlc3Qtc2VydmljZS1yb2xlLWtleQ=="
+    responses:
+      - status_code: 200
+        headers:
+          Content-Type:
+            - "text/plain; version=0.0.4; charset=utf-8"
+        body: |-
+          # HELP node_cpu_seconds_total Seconds the CPUs spent in each mode.
+          # TYPE node_cpu_seconds_total counter
+          node_cpu_seconds_total{cpu="0",mode="idle"} 72000.0
+          node_cpu_seconds_total{cpu="0",mode="user"} 1200.0
+          node_cpu_seconds_total{cpu="0",mode="system"} 300.0
+          node_cpu_seconds_total{cpu="0",mode="iowait"} 50.0
+          # HELP node_memory_MemAvailable_bytes Available memory in bytes.
+          # TYPE node_memory_MemAvailable_bytes gauge
+          node_memory_MemAvailable_bytes 4294967296
+          # HELP node_memory_MemTotal_bytes Total memory in bytes.
+          # TYPE node_memory_MemTotal_bytes gauge
+          node_memory_MemTotal_bytes 8589934592
+          # HELP node_disk_io_time_seconds_total Total seconds spent doing I/Os.
+          # TYPE node_disk_io_time_seconds_total counter
+          node_disk_io_time_seconds_total{device="sda"} 42.5
+          # HELP node_filesystem_avail_bytes Filesystem space available to non-root users.
+          # TYPE node_filesystem_avail_bytes gauge
+          node_filesystem_avail_bytes{device="/dev/sda1",fstype="ext4",mountpoint="/"} 21474836480
+          # HELP node_network_receive_bytes_total Network device statistic receive_bytes.
+          # TYPE node_network_receive_bytes_total counter
+          node_network_receive_bytes_total{device="eth0"} 1073741824
+          # HELP node_network_transmit_bytes_total Network device statistic transmit_bytes.
+          # TYPE node_network_transmit_bytes_total counter
+          node_network_transmit_bytes_total{device="eth0"} 536870912
+          # HELP pg_stat_database_numbackends Number of backends currently connected.
+          # TYPE pg_stat_database_numbackends gauge
+          pg_stat_database_numbackends{datname="postgres"} 5
+          # HELP pg_stat_database_tup_fetched Number of rows fetched by queries.
+          # TYPE pg_stat_database_tup_fetched counter
+          pg_stat_database_tup_fetched{datname="postgres"} 98765
+          # HELP pg_stat_database_tup_inserted Number of rows inserted by queries.
+          # TYPE pg_stat_database_tup_inserted counter
+          pg_stat_database_tup_inserted{datname="postgres"} 4321
+          # HELP pg_stat_activity_count Number of connections in each state.
+          # TYPE pg_stat_activity_count gauge
+          pg_stat_activity_count{datname="postgres",state="active"} 2
+          pg_stat_activity_count{datname="postgres",state="idle"} 3
+          # HELP supavisor_client_connections_total Total number of client connections.
+          # TYPE supavisor_client_connections_total gauge
+          supavisor_client_connections_total 10
+          # HELP supavisor_server_connections_total Total number of server connections.
+          # TYPE supavisor_server_connections_total gauge
+          supavisor_server_connections_total 5
+          # HELP pgrst_db_pool_available Number of available database connections.
+          # TYPE pgrst_db_pool_available gauge
+          pgrst_db_pool_available 8
+          # HELP pgrst_schema_cache_loads_total Total number of schema cache loads.
+          # TYPE pgrst_schema_cache_loads_total counter
+          pgrst_schema_cache_loads_total 3
+          # HELP gotrue_api_requests_total Total number of API requests.
+          # TYPE gotrue_api_requests_total counter
+          gotrue_api_requests_total{method="POST",path="/token",status="200"} 512
+          # HELP gotrue_errors_total Total number of errors.
+          # TYPE gotrue_errors_total counter
+          gotrue_errors_total{error="invalid_grant"} 4
+          # HELP realtime_connected_users Number of connected users.
+          # TYPE realtime_connected_users gauge
+          realtime_connected_users 7
+          # HELP realtime_subscriptions Number of active subscriptions.
+          # TYPE realtime_subscriptions gauge
+          realtime_subscriptions 14
+          # HELP storage_api_requests_total Total number of Storage API requests.
+          # TYPE storage_api_requests_total counter
+          storage_api_requests_total{method="GET",status="200"} 256

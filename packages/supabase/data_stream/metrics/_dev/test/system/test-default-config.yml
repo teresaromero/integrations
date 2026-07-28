@@ -1,0 +1,9 @@
+service: supabase_metrics
+vars:
+  targets:
+    - "{{Hostname}}:{{Port}}"
+  scheme: http
+  metrics_path: /customer/v1/privileged/metrics
+  scrape_interval: 10s
+  username: service_role
+  password: test-service-role-key

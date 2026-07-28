@@ -84,5 +84,4 @@ All metrics are stored under the `metrics.*` field namespace with their original
 | data_stream.dataset | Data stream dataset. | constant_keyword |
 | data_stream.namespace | Data stream namespace. | constant_keyword |
 | data_stream.type | Data stream type. | constant_keyword |
-| scope.attributes.service_type | Supabase service producing the metric. | keyword |
 

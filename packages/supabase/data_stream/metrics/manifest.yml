@@ -1,7 +1,5 @@
 title: "Supabase Metrics"
 type: metrics
-elasticsearch:
-  index_mode: time_series
 streams:
   - package: prometheus_input_otel
     title: Supabase Metrics

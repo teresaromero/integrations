@@ -28,9 +28,6 @@ requires:
   input:
     - package: prometheus_input_otel
       version: "0.1.1"
-  content:
-    - package: supabase_otel
-      version: "0.1.0"
 policy_templates:
   - name: supabase
     title: Supabase Metrics
